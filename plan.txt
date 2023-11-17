@@ -1,0 +1,13 @@
+# calculate discount price
+
+# update featurd image status
+
+
+# remove all pending reviews
+
+# update profile
+
+# cart api
+
+
+# get single product

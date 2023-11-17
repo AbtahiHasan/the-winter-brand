@@ -1,0 +1,14 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cart_controller_1 = __importDefault(require("../controllers/cart.controller"));
+const cartRouter = express_1.default.Router();
+cartRouter.post("/create-cart", cart_controller_1.default.createCart);
+cartRouter.put("/update-cart-product-quantity", cart_controller_1.default.updateCartQuantity);
+cartRouter.get("/get-cart/:email", cart_controller_1.default.getCartByEmail);
+cartRouter.get("/get-cart-is-exist", cart_controller_1.default.getIsCartExistByEmail);
+cartRouter.delete("/delete-cart/:id", cart_controller_1.default.deleteCart);
+exports.default = cartRouter;
