@@ -10,6 +10,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const http_status_1 = __importDefault(require("http-status"));
 const node_cache_1 = __importDefault(require("node-cache"));
 const morgan_1 = __importDefault(require("morgan"));
+const helmet_1 = __importDefault(require("helmet"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const errorHandler_middleware_1 = __importDefault(require("./middleware/errorHandler.middleware"));
 const product_routes_1 = __importDefault(require("./routes/product.routes"));
@@ -38,8 +39,8 @@ exports.app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
-
+exports.app.use((0, helmet_1.default)());
+exports.app.use(helmet_1.default.crossOriginResourcePolicy({ policy: "cross-origin" }));
 exports.app.use((0, morgan_1.default)("dev"));
 exports.app.use(express_1.default.json());
 exports.app.use(express_1.default.urlencoded({ extended: true }));
