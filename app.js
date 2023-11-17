@@ -31,7 +31,7 @@ exports.app.use((0, cookie_parser_1.default)());
 //     origin: config.origin
 // }))
 exports.app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "https://the-winter-brand.netlify.app"],
+    origin: ["http://localhost:5173", "https://the-winter-brand.web.app"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Enable cookies and authorization headers
 }));
