@@ -88,10 +88,14 @@ const getAllUsers = (0, asyncError_middleware_1.default)((req, res, next) => __a
         let skip = parseInt((((_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.skip) || "0"));
         let limit = parseInt((((_b = req === null || req === void 0 ? void 0 : req.query) === null || _b === void 0 ? void 0 : _b.limit) || "20"));
         const users = yield user_model_1.default.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const totalUsers = yield user_model_1.default.estimatedDocumentCount();
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
-            data: users
+            data: users,
+            meta: {
+                total: totalUsers
+            }
         });
     }
     catch (error) {
