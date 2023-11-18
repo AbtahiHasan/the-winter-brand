@@ -153,7 +153,6 @@ const newPayment = (0, asyncError_middleware_1.default)((req, res, next) => __aw
     var _j;
     try {
         const amount = (_j = req.body) === null || _j === void 0 ? void 0 : _j.amount;
-        console.log(amount);
         if (!amount)
             return next(new ErrorHandler_1.default("amount is required", http_status_1.default.BAD_REQUEST));
         const paymentIntent = yield stripe.paymentIntents.create({
@@ -228,7 +227,6 @@ const newSubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __
 }));
 const unsubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { subscriptionId } = req.body;
-    console.log(subscriptionId);
     try {
         const canceledSubscription = yield stripe.subscriptions.cancel(subscriptionId);
         if (canceledSubscription.status === 'canceled') {

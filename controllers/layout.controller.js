@@ -111,7 +111,6 @@ const deleteLayout = (0, asyncError_middleware_1.default)((req, res, next) => __
 const deleteMultipleFeaturedImages = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { images_id } = req.body;
-        console.log(images_id);
         if (!images_id)
             return next(new ErrorHandler_1.default("images id required", http_status_1.default.BAD_REQUEST));
         const typeAlredyExits = yield layout_model_1.default.findOne({ type: "FEATURED_IMAGE" });

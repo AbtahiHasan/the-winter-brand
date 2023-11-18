@@ -12,15 +12,15 @@ const refreshTokenExpire = parseInt(config_1.default.jwt.refresh_expires_in || "
 exports.accessTokenOption = {
     exprire: new Date(Date.now() + accessTokenExpire * 60 * 60 * 1000),
     maxAge: accessTokenExpire * 60 * 60 * 1000,
-    httpOnly: true,
-    semeSite: "lex",
+    httpOnly: config_1.default.env === "production",
+    SemeSite: "lex",
     secure: config_1.default.env === "production",
 };
 exports.refreshTokenOption = {
     exprire: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
     maxAge: refreshTokenExpire * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    semeSite: "lex",
+    httpOnly: config_1.default.env === "production",
+    SemeSite: "lex",
     secure: config_1.default.env === "production",
 };
 const sendToken = (user, statusCode, res) => {

@@ -65,7 +65,6 @@ const updateUserProfile = (0, asyncError_middleware_1.default)((req, res, next) 
 const updateUserRole = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { role, id } = req.body;
-        console.log(role, id);
         if (!role || !id)
             return next(new ErrorHandler_1.default("id and role is required", http_status_1.default.BAD_REQUEST));
         yield user_model_1.default.findByIdAndUpdate(id, {

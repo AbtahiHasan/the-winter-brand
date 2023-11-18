@@ -34,7 +34,6 @@ const addOrder = (0, asyncError_middleware_1.default)((orderData, res, next) => 
                 if (!orderData.subscription_id)
                     return next(new ErrorHandler_1.default("subscription id is required", http_status_1.default.BAD_REQUEST));
             }
-            console.log(orderData.gift);
             if (orderData.packages.type === "gift") {
                 if (!orderData.gift.gift_message || !orderData.gift.gift_recipient_email || !orderData.gift.gift_message_date || !orderData.gift.shipping_date)
                     return next(new ErrorHandler_1.default("gift data is required", http_status_1.default.BAD_REQUEST));

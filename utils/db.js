@@ -23,7 +23,6 @@ const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.log("ee", error.message);
         setTimeout(() => {
             connectDb();
         }, 5000);

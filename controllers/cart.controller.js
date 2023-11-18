@@ -34,7 +34,6 @@ const createCart = (0, asyncError_middleware_1.default)((req, res, next) => __aw
             email: cartData.email,
             product_quantity: product.quantity
         };
-        console.log(24, newCart);
         yield cart_model_1.default.create(newCart);
         (0, sendResponse_1.default)(res, {
             success: true,
