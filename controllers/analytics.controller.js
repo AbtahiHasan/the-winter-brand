@@ -25,11 +25,24 @@ const getTotalCreatedData = (0, asyncError_middleware_1.default)((req, res, next
         const totalOrder = yield order_model_1.default.estimatedDocumentCount();
         const totalReviews = yield order_model_1.default.find({ user_review: { $exists: true } }).countDocuments();
         const totalContacts = yield contact_model_1.default.estimatedDocumentCount();
+        const orders = yield order_model_1.default.find();
+        let totalEarnings = 0;
+        orders.forEach((order) => {
+            if (order.packages && order.packages.price) {
+                totalEarnings += order.packages.price;
+            }
+            else if (order.products && order.products.length > 0) {
+                order.products.forEach((product) => {
+                    totalEarnings += product.price * product.quantity;
+                });
+            }
+        });
         const analytics = {
             users: totalUser,
             orders: totalOrder,
             reviews: totalReviews,
-            contacts: totalContacts
+            contacts: totalContacts,
+            earnings: totalEarnings
         };
         (0, sendResponse_1.default)(res, {
             success: true,
