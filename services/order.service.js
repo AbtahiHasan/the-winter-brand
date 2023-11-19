@@ -21,7 +21,7 @@ const product_model_1 = __importDefault(require("../models/product.model"));
 const mongodb_1 = require("mongodb");
 const cart_model_1 = __importDefault(require("../models/cart.model"));
 const addOrder = (0, asyncError_middleware_1.default)((orderData, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     try {
         if (orderData.order_type === "payment" || orderData.order_type === "subscription") {
             if (!(orderData === null || orderData === void 0 ? void 0 : orderData.packages))
@@ -68,11 +68,11 @@ const addOrder = (0, asyncError_middleware_1.default)((orderData, res, next) => 
                     postcode: orderData.delivery_info.postcode,
                     city: orderData.delivery_info.city,
                     phone: orderData.delivery_info.phone,
-                    apartment: orderData === null || orderData === void 0 ? void 0 : orderData.apartment
+                    apartment: (_e = orderData === null || orderData === void 0 ? void 0 : orderData.delivery_info) === null || _e === void 0 ? void 0 : _e.apartment
                 },
                 promotions: {
-                    phone_number: (_e = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _e === void 0 ? void 0 : _e.phone_number,
-                    email: (_f = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _f === void 0 ? void 0 : _f.email,
+                    phone_number: (_f = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _f === void 0 ? void 0 : _f.phone_number,
+                    email: (_g = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _g === void 0 ? void 0 : _g.email,
                 },
             };
             yield order_model_1.default.create(newOrder);
@@ -121,8 +121,8 @@ const addOrder = (0, asyncError_middleware_1.default)((orderData, res, next) => 
                     apartment: orderData === null || orderData === void 0 ? void 0 : orderData.apartment
                 },
                 promotions: {
-                    phone_number: (_g = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _g === void 0 ? void 0 : _g.phone_number,
-                    email: (_h = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _h === void 0 ? void 0 : _h.email,
+                    phone_number: (_h = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _h === void 0 ? void 0 : _h.phone_number,
+                    email: (_j = orderData === null || orderData === void 0 ? void 0 : orderData.promotions) === null || _j === void 0 ? void 0 : _j.email,
                 },
             };
             yield order_model_1.default.create(newOrder);
