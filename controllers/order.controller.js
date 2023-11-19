@@ -96,13 +96,17 @@ const getOrders = (0, asyncError_middleware_1.default)((req, res, next) => __awa
         let skip = parseInt((((_c = req === null || req === void 0 ? void 0 : req.query) === null || _c === void 0 ? void 0 : _c.skip) || "0"));
         let limit = parseInt((((_d = req === null || req === void 0 ? void 0 : req.query) === null || _d === void 0 ? void 0 : _d.limit) || "20"));
         const orders = yield order_model_1.default.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const totalOrders = yield order_model_1.default.estimatedDocumentCount();
+        const cartPaymentQuery = { order_type: { $in: ['payment', 'cart'] } };
+        const subscriptionQuery = { order_type: 'subscription' };
+        const cartPaymentCount = yield order_model_1.default.countDocuments(cartPaymentQuery);
+        const subscriptionCount = yield order_model_1.default.countDocuments(subscriptionQuery);
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
             data: orders,
             meta: {
-                total: totalOrders
+                payment: cartPaymentCount,
+                subscription: subscriptionCount
             }
         });
     }
@@ -141,7 +145,7 @@ const getOrdersByEmail = (0, asyncError_middleware_1.default)((req, res, next) =
         const email = (_h = req === null || req === void 0 ? void 0 : req.query) === null || _h === void 0 ? void 0 : _h.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is required", http_status_1.default.BAD_REQUEST));
-        const orders = yield order_model_1.default.find({ email }).select("name transaction_id order_status email delivery_info.address createdAt subscription_id user_review").sort({ createdAt: -1 });
+        const orders = yield order_model_1.default.find({ email }).select("name transaction_id order_status email delivery_info.address createdAt subscription_id user_review order_status").sort({ createdAt: -1 });
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
@@ -235,6 +239,11 @@ const unsubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __a
         const canceledSubscription = yield stripe.subscriptions.cancel(subscriptionId);
         if (canceledSubscription.status === 'canceled') {
             res.json({ message: "Unsubscription successful", canceledSubscription });
+            yield order_model_1.default.updateOne({ subscription_id: subscriptionId }, {
+                $set: {
+                    order_status: "inactive"
+                }
+            });
         }
         else {
             res.status(400).json({ error: "Subscription cancellation failed" });

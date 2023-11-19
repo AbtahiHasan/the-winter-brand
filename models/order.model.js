@@ -61,6 +61,10 @@ const OrderSchema = new mongoose_1.Schema({
     subscription_id: {
         type: String,
     },
+    subscription_status: {
+        type: String,
+        enum: ["active", "inactive"]
+    },
     company: {
         type: String,
         default: null
