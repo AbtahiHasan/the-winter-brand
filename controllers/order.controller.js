@@ -99,10 +99,8 @@ const getOrders = (0, asyncError_middleware_1.default)((req, res, next) => __awa
         const type = !((_f = req === null || req === void 0 ? void 0 : req.query) === null || _f === void 0 ? void 0 : _f.type) ? ["payment", "cart"] : ((_g = req === null || req === void 0 ? void 0 : req.query) === null || _g === void 0 ? void 0 : _g.type) === "subscription" ? ["subscription"] : ["payment", "cart"];
         const query = orderTap === "all" ? {} : { order_status: orderTap };
         const orders = yield order_model_1.default.find({ $and: [{ order_type: { $in: type } }, query] }).sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const cartPaymentQuery = { order_type: { $in: ['payment', 'cart'] } };
-        const subscriptionQuery = { order_type: 'subscription' };
-        const cartPaymentCount = yield order_model_1.default.countDocuments(cartPaymentQuery);
-        const subscriptionCount = yield order_model_1.default.countDocuments(subscriptionQuery);
+        const cartPaymentCount = yield order_model_1.default.countDocuments({ $and: [{ order_type: { $in: ["payment", "cart"] } }, query] });
+        const subscriptionCount = yield order_model_1.default.countDocuments({ $and: [{ order_type: { $in: ["subscription"] } }, query] });
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
@@ -185,8 +183,8 @@ const newPayment = (0, asyncError_middleware_1.default)((req, res, next) => __aw
 }));
 const newSubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _o, _p;
-    const { name, email, paymentMethod, amount } = req.body;
     try {
+        const { name, email, paymentMethod, amount } = req.body;
         // Create a customer
         const customer = yield stripe.customers.create({
             email,
@@ -232,8 +230,7 @@ const newSubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __
         });
     }
     catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Server error" });
+        return next(new ErrorHandler_1.default(error.message, http_status_1.default.BAD_REQUEST));
     }
 }));
 const unsubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

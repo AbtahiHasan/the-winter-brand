@@ -90,7 +90,7 @@ const getAllUsers = (0, asyncError_middleware_1.default)((req, res, next) => __a
         const role = ((_c = req === null || req === void 0 ? void 0 : req.query) === null || _c === void 0 ? void 0 : _c.role) || "all";
         const query = role === "all" ? {} : { role: role };
         const users = yield user_model_1.default.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const totalUsers = yield user_model_1.default.estimatedDocumentCount();
+        const totalUsers = yield user_model_1.default.countDocuments(query);
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
