@@ -17,6 +17,5 @@ userRouter.get("/logout", auth_middleware_1.isAuthenticated, user_controller_1.d
 // only admin 
 userRouter.put("/update-user-role", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), user_controller_1.default.updateUserRole);
 userRouter.get("/search-users/:query", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), user_controller_1.default.searchUsers);
-// userRouter.get("/get-all-users", isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), userController.getAllUsers)
-userRouter.get("/get-all-users", user_controller_1.default.getAllUsers);
+userRouter.get("/get-all-users", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), user_controller_1.default.getAllUsers);
 exports.default = userRouter;

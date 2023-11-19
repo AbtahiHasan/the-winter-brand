@@ -51,10 +51,14 @@ const getReviews = (0, asyncError_middleware_1.default)((req, res, next) => __aw
         let skip = parseInt((((_b = req === null || req === void 0 ? void 0 : req.query) === null || _b === void 0 ? void 0 : _b.skip) || "0"));
         let limit = parseInt((((_c = req === null || req === void 0 ? void 0 : req.query) === null || _c === void 0 ? void 0 : _c.limit) || "20"));
         const reviews = yield order_model_1.default.find({ user_review: { $exists: true } }).select("user_review email").sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const totalReviews = yield order_model_1.default.countDocuments({ user_review: { $exists: true } });
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.OK,
-            data: reviews
+            data: reviews,
+            meta: {
+                total: totalReviews
+            }
         });
     }
     catch (error) {
