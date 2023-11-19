@@ -83,11 +83,13 @@ const updateUserRole = (0, asyncError_middleware_1.default)((req, res, next) => 
     }
 }));
 const getAllUsers = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     try {
         let skip = parseInt((((_a = req === null || req === void 0 ? void 0 : req.query) === null || _a === void 0 ? void 0 : _a.skip) || "0"));
         let limit = parseInt((((_b = req === null || req === void 0 ? void 0 : req.query) === null || _b === void 0 ? void 0 : _b.limit) || "20"));
-        const users = yield user_model_1.default.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const role = ((_c = req === null || req === void 0 ? void 0 : req.query) === null || _c === void 0 ? void 0 : _c.role) || "all";
+        const query = role === "all" ? {} : { role: role };
+        const users = yield user_model_1.default.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit);
         const totalUsers = yield user_model_1.default.estimatedDocumentCount();
         (0, sendResponse_1.default)(res, {
             success: true,
@@ -103,13 +105,13 @@ const getAllUsers = (0, asyncError_middleware_1.default)((req, res, next) => __a
     }
 }));
 const searchUsers = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d, _e;
+    var _d, _e, _f;
     try {
-        const query = (_c = req === null || req === void 0 ? void 0 : req.params) === null || _c === void 0 ? void 0 : _c.query;
+        const query = (_d = req === null || req === void 0 ? void 0 : req.params) === null || _d === void 0 ? void 0 : _d.query;
         if (!query)
             return next(new ErrorHandler_1.default("search query is required", http_status_1.default.BAD_REQUEST));
-        let skip = parseInt((((_d = req === null || req === void 0 ? void 0 : req.query) === null || _d === void 0 ? void 0 : _d.skip) || "0"));
-        let limit = parseInt((((_e = req === null || req === void 0 ? void 0 : req.query) === null || _e === void 0 ? void 0 : _e.limit) || "20"));
+        let skip = parseInt((((_e = req === null || req === void 0 ? void 0 : req.query) === null || _e === void 0 ? void 0 : _e.skip) || "0"));
+        let limit = parseInt((((_f = req === null || req === void 0 ? void 0 : req.query) === null || _f === void 0 ? void 0 : _f.limit) || "20"));
         const users = yield user_model_1.default.find({
             $or: [
                 { name: { $regex: query, $options: "i" } },
@@ -128,9 +130,9 @@ const searchUsers = (0, asyncError_middleware_1.default)((req, res, next) => __a
     }
 }));
 const getUserRole = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _f;
+    var _g;
     try {
-        const email = (_f = req.params) === null || _f === void 0 ? void 0 : _f.email;
+        const email = (_g = req.params) === null || _g === void 0 ? void 0 : _g.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is require in query", http_status_1.default.BAD_REQUEST));
         const isCachedUser = app_1.nodeCache.has(`user:${email}`);
@@ -167,9 +169,9 @@ const getUserRole = (0, asyncError_middleware_1.default)((req, res, next) => __a
     }
 }));
 const getProfileByEmail = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _g;
+    var _h;
     try {
-        const email = (_g = req.params) === null || _g === void 0 ? void 0 : _g.email;
+        const email = (_h = req.params) === null || _h === void 0 ? void 0 : _h.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is required", http_status_1.default.BAD_REQUEST));
         const userInfo = yield user_model_1.default.findOne({ email });
@@ -200,9 +202,9 @@ const loginUser = (0, asyncError_middleware_1.default)((req, res, next) => __awa
     }
 }));
 const logout = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _h;
+    var _j;
     try {
-        const email = (_h = req.query) === null || _h === void 0 ? void 0 : _h.email;
+        const email = (_j = req.query) === null || _j === void 0 ? void 0 : _j.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is require in query", http_status_1.default.BAD_REQUEST));
         app_1.nodeCache.del(`user:${email}`);
