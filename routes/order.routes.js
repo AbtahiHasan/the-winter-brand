@@ -18,6 +18,7 @@ orderRouter.get("/get-invoice/:id", auth_middleware_1.isAuthenticated, order_con
 orderRouter.delete("/delete-order/:id", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), order_controller_1.default.deleteOrder);
 orderRouter.put("/update-order-status", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), order_controller_1.default.updateOrderStatus);
 orderRouter.get("/search-orders/:query", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), order_controller_1.default.searchOrders);
-orderRouter.get("/get-orders", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), order_controller_1.default.getOrders);
+// orderRouter.get("/get-orders", isAuthenticated, authorizeRoles(USER_ROLE.ADMIN), orderController.getOrders)
+orderRouter.get("/get-orders", order_controller_1.default.getOrders);
 orderRouter.get("/get-order/:id", auth_middleware_1.isAuthenticated, (0, auth_middleware_1.authorizeRoles)(userRole_1.USER_ROLE.ADMIN), order_controller_1.default.getSingleOrder);
 exports.default = orderRouter;

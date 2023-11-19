@@ -43,7 +43,7 @@ const addOrder = (0, asyncError_middleware_1.default)((orderData, res, next) => 
                 name: orderData.name,
                 transaction_id: orderData.transaction_id,
                 subscription_id: orderData.subscription_id,
-                order_status: orderData.subscription_id && "active",
+                subscription_status: orderData.subscription_id && "active",
                 company: orderData.company,
                 contact_email: orderData.contact_email,
                 email: orderData.email,

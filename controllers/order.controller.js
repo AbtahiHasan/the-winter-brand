@@ -91,11 +91,14 @@ const deleteOrder = (0, asyncError_middleware_1.default)((req, res, next) => __a
     }
 }));
 const getOrders = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c, _d;
+    var _c, _d, _e, _f, _g;
     try {
         let skip = parseInt((((_c = req === null || req === void 0 ? void 0 : req.query) === null || _c === void 0 ? void 0 : _c.skip) || "0"));
         let limit = parseInt((((_d = req === null || req === void 0 ? void 0 : req.query) === null || _d === void 0 ? void 0 : _d.limit) || "20"));
-        const orders = yield order_model_1.default.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const orderTap = ((_e = req === null || req === void 0 ? void 0 : req.query) === null || _e === void 0 ? void 0 : _e.tap) || "all";
+        const type = !((_f = req === null || req === void 0 ? void 0 : req.query) === null || _f === void 0 ? void 0 : _f.type) ? ["payment", "cart"] : ((_g = req === null || req === void 0 ? void 0 : req.query) === null || _g === void 0 ? void 0 : _g.type) === "subscription" ? ["subscription"] : ["payment", "cart"];
+        const query = orderTap === "all" ? {} : { order_status: orderTap };
+        const orders = yield order_model_1.default.find({ $and: [{ order_type: { $in: type } }, query] }).sort({ createdAt: -1 }).skip(skip).limit(limit);
         const cartPaymentQuery = { order_type: { $in: ['payment', 'cart'] } };
         const subscriptionQuery = { order_type: 'subscription' };
         const cartPaymentCount = yield order_model_1.default.countDocuments(cartPaymentQuery);
@@ -115,13 +118,13 @@ const getOrders = (0, asyncError_middleware_1.default)((req, res, next) => __awa
     }
 }));
 const searchOrders = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e, _f, _g;
+    var _h, _j, _k;
     try {
-        const query = (_e = req === null || req === void 0 ? void 0 : req.params) === null || _e === void 0 ? void 0 : _e.query;
+        const query = (_h = req === null || req === void 0 ? void 0 : req.params) === null || _h === void 0 ? void 0 : _h.query;
         if (!query)
             return next(new ErrorHandler_1.default("search query is required", http_status_1.default.BAD_REQUEST));
-        let skip = parseInt((((_f = req === null || req === void 0 ? void 0 : req.query) === null || _f === void 0 ? void 0 : _f.skip) || "0"));
-        let limit = parseInt((((_g = req === null || req === void 0 ? void 0 : req.query) === null || _g === void 0 ? void 0 : _g.limit) || "20"));
+        let skip = parseInt((((_j = req === null || req === void 0 ? void 0 : req.query) === null || _j === void 0 ? void 0 : _j.skip) || "0"));
+        let limit = parseInt((((_k = req === null || req === void 0 ? void 0 : req.query) === null || _k === void 0 ? void 0 : _k.limit) || "20"));
         const orders = yield order_model_1.default.find({
             $or: [
                 { transaction_id: { $regex: query, $options: "i" } },
@@ -140,9 +143,9 @@ const searchOrders = (0, asyncError_middleware_1.default)((req, res, next) => __
     }
 }));
 const getOrdersByEmail = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _h;
+    var _l;
     try {
-        const email = (_h = req === null || req === void 0 ? void 0 : req.query) === null || _h === void 0 ? void 0 : _h.email;
+        const email = (_l = req === null || req === void 0 ? void 0 : req.query) === null || _l === void 0 ? void 0 : _l.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is required", http_status_1.default.BAD_REQUEST));
         const orders = yield order_model_1.default.find({ email }).select("name transaction_id order_status email delivery_info.address createdAt subscription_id user_review order_status").sort({ createdAt: -1 });
@@ -158,9 +161,9 @@ const getOrdersByEmail = (0, asyncError_middleware_1.default)((req, res, next) =
 }));
 // payments
 const newPayment = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _j;
+    var _m;
     try {
-        const amount = (_j = req.body) === null || _j === void 0 ? void 0 : _j.amount;
+        const amount = (_m = req.body) === null || _m === void 0 ? void 0 : _m.amount;
         if (!amount)
             return next(new ErrorHandler_1.default("amount is required", http_status_1.default.BAD_REQUEST));
         const paymentIntent = yield stripe.paymentIntents.create({
@@ -181,7 +184,7 @@ const newPayment = (0, asyncError_middleware_1.default)((req, res, next) => __aw
     }
 }));
 const newSubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _k, _l;
+    var _o, _p;
     const { name, email, paymentMethod, amount } = req.body;
     try {
         // Create a customer
@@ -216,7 +219,7 @@ const newSubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __
             },
             expand: ["latest_invoice.payment_intent"],
         });
-        const clientSecret = (_l = (_k = subscription === null || subscription === void 0 ? void 0 : subscription.latest_invoice) === null || _k === void 0 ? void 0 : _k.payment_intent) === null || _l === void 0 ? void 0 : _l.client_secret;
+        const clientSecret = (_p = (_o = subscription === null || subscription === void 0 ? void 0 : subscription.latest_invoice) === null || _o === void 0 ? void 0 : _o.payment_intent) === null || _p === void 0 ? void 0 : _p.client_secret;
         if (!clientSecret) {
             throw new Error("Client secret not found in the subscription");
         }
@@ -241,7 +244,7 @@ const unsubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __a
             res.json({ message: "Unsubscription successful", canceledSubscription });
             yield order_model_1.default.updateOne({ subscription_id: subscriptionId }, {
                 $set: {
-                    order_status: "inactive"
+                    subscription_status: "inactive"
                 }
             });
         }
@@ -255,9 +258,9 @@ const unsubscribe = (0, asyncError_middleware_1.default)((req, res, next) => __a
     }
 }));
 const getInvoiceById = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _m;
+    var _q;
     try {
-        const orderId = (_m = req === null || req === void 0 ? void 0 : req.params) === null || _m === void 0 ? void 0 : _m.id;
+        const orderId = (_q = req === null || req === void 0 ? void 0 : req.params) === null || _q === void 0 ? void 0 : _q.id;
         if (!orderId)
             return next(new ErrorHandler_1.default("order id required", http_status_1.default.BAD_REQUEST));
         const order = yield order_model_1.default.findById(orderId).select("name packages delivery_info.address delivery_info.phone contact_email createdAt products order_type");
@@ -273,9 +276,9 @@ const getInvoiceById = (0, asyncError_middleware_1.default)((req, res, next) => 
 }));
 // only admin 
 const getSingleOrder = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _o;
+    var _r;
     try {
-        const orderId = (_o = req === null || req === void 0 ? void 0 : req.params) === null || _o === void 0 ? void 0 : _o.id;
+        const orderId = (_r = req === null || req === void 0 ? void 0 : req.params) === null || _r === void 0 ? void 0 : _r.id;
         if (!orderId)
             return next(new ErrorHandler_1.default("order id required", http_status_1.default.BAD_REQUEST));
         const order = yield order_model_1.default.findById(orderId);
