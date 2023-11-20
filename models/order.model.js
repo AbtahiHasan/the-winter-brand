@@ -148,6 +148,9 @@ const OrderSchema = new mongoose_1.Schema({
         },
         review: {
             type: String,
+        },
+        avatar: {
+            type: String
         }
     },
     promotions: {

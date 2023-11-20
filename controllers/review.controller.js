@@ -17,7 +17,7 @@ const ErrorHandler_1 = __importDefault(require("../utils/ErrorHandler"));
 const http_status_1 = __importDefault(require("http-status"));
 const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
 const order_model_1 = __importDefault(require("../models/order.model"));
-// TODO  create order
+const user_model_1 = __importDefault(require("../models/user.model"));
 const createReview = (0, asyncError_middleware_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -26,12 +26,20 @@ const createReview = (0, asyncError_middleware_1.default)((req, res, next) => __
             return next(new ErrorHandler_1.default("order id required", http_status_1.default.OK));
         const reviewData = req.body;
         const order = yield order_model_1.default.findById(orderId);
+        let avatar = "";
+        if (order) {
+            const isUserExits = yield user_model_1.default.findOne({ email: order.email });
+            if (isUserExits) {
+                avatar = (isUserExits === null || isUserExits === void 0 ? void 0 : isUserExits.avatar) || "";
+            }
+        }
         if (!order)
             return next(new ErrorHandler_1.default("Invalid order id", http_status_1.default.BAD_REQUEST));
         const newReview = {
             rating: reviewData.rating,
             name: reviewData.name,
             review: reviewData.review,
+            avatar: avatar
         };
         order.user_review = newReview;
         yield (order === null || order === void 0 ? void 0 : order.save());
