@@ -146,7 +146,7 @@ const getOrdersByEmail = (0, asyncError_middleware_1.default)((req, res, next) =
         const email = (_l = req === null || req === void 0 ? void 0 : req.query) === null || _l === void 0 ? void 0 : _l.email;
         if (!email)
             return next(new ErrorHandler_1.default("email is required", http_status_1.default.BAD_REQUEST));
-        const orders = yield order_model_1.default.find({ email }).select("name transaction_id order_status email delivery_info.address createdAt subscription_id user_review order_status").sort({ createdAt: -1 });
+        const orders = yield order_model_1.default.find({ email }).select("name transaction_id order_status email delivery_info.address createdAt subscription_id user_review subscription_status").sort({ createdAt: -1 });
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: http_status_1.default.CREATED,
