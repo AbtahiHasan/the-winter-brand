@@ -260,7 +260,7 @@ const getInvoiceById = (0, asyncError_middleware_1.default)((req, res, next) => 
         const orderId = (_q = req === null || req === void 0 ? void 0 : req.params) === null || _q === void 0 ? void 0 : _q.id;
         if (!orderId)
             return next(new ErrorHandler_1.default("order id required", http_status_1.default.BAD_REQUEST));
-        const order = yield order_model_1.default.findById(orderId).select("name packages delivery_info.address delivery_info.phone contact_email createdAt products order_type");
+        const order = yield order_model_1.default.findById(orderId).select("name packages delivery_info.address delivery_info.phone contact_email createdAt products order_type subscription_id transaction_id subscription_status");
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
