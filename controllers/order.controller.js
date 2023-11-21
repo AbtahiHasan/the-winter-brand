@@ -166,7 +166,7 @@ const newPayment = (0, asyncError_middleware_1.default)((req, res, next) => __aw
             return next(new ErrorHandler_1.default("amount is required", http_status_1.default.BAD_REQUEST));
         const paymentIntent = yield stripe.paymentIntents.create({
             currency: "usd",
-            amount: amount,
+            amount: parseInt(amount),
             payment_method_types: ["card"],
         });
         (0, sendResponse_1.default)(res, {
